@@ -8,7 +8,6 @@
 void HeartBeat();
 
 void HeartBeat() {
-  Serial.println("I'm working");
   digitalWrite(LED_BUILTIN, HIGH);
   delay(250);
   digitalWrite(LED_BUILTIN, LOW);
@@ -40,7 +39,7 @@ AsyncWebSocket socket("/ws"); //Handles WebSocket-specific communication
 void onWebSocketEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType type, void *arg, uint8_t *data, size_t len) {
   if (type == WS_EVT_CONNECT) {
     Serial.printf("Client connected: %u\n", client->id());
-    client->text("Welcome to ESP32 WebSocket Server!");
+    client->text("Connected with ESP32");
   } else if (type == WS_EVT_DISCONNECT) {
     Serial.printf("Client disconnected: %u\n", client->id());
   } else if (type == WS_EVT_DATA) {
@@ -49,9 +48,27 @@ void onWebSocketEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsE
       command += (char)data[i];
     }
     Serial.printf("Command received: %s\n", command.c_str());
-
-    //respond to client
-    client->text("Echo: " + command);
+    if(command = GO)
+    {
+      Serial.printf(GO);
+    }
+    else if(command = BACK)
+    {
+      Serial.printf(BACK);
+    }
+    else if(command = RIGHT)
+    {
+      Serial.printf(RIGHT);
+    }
+    else if(command = LEFT)
+    {
+      Serial.printf(LEFT);
+    }
+    else {
+      Serial.printf(UNKNOWN_COMMAND);
+    }
+      //respond to client
+      client->text("ESP32 received the command: " + command);
   }
 }
 
