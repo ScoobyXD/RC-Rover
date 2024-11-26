@@ -1,7 +1,8 @@
 #include "config.h"
 #include <Arduino.h>
 #include <WiFi.h>
-
+#include <AsyncTCP.h>
+#include <ESPAsyncWebServer.h>
 
 //Heartbeat
 void HeartBeat();
@@ -32,7 +33,35 @@ bool WiFi_INIT(const char* ssid, const char* password){
   return true;
 }
 
+//WebSocket server
+//WebSockets rely on HTTP for the initial handshake, but after that, 
+//client sends a special HTTP request called a WebSocket upgrade request, upgrading into WebSocket protocol, which is independent of HTTP
+AsyncWebSocket socket("/ws"); //Handles WebSocket-specific communication
+AsyncWebServer gate(80); // This is the main HTTP server instance
 
+void onWebSocketEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType type, void *arg, uint8_t *data, size_t len) {
+  if (type == WS_EVT_CONNECT) {
+    Serial.printf("Client connected: %u\n", client->id());
+    client->text("Welcome to ESP32 WebSocket Server!");
+  } else if (type == WS_EVT_DISCONNECT) {
+    Serial.printf("Client disconnected: %u\n", client->id());
+  } else if (type == WS_EVT_DATA) {
+    String command = "";
+    for (size_t i = 0; i < len; i++) {
+      command += (char)data[i];
+    }
+    Serial.printf("Command received: %s\n", command.c_str());
+
+    if (command == GO) {
+      Serial.println(GO);
+    } else if (command == BACK) {
+      Serial.println(BACK);
+    } else {
+      Serial.println("Unknown command");
+    }
+    client->text("Command received: " + command);
+  }
+}
 
 void setup() {
   //Heartbeat
@@ -44,6 +73,10 @@ void setup() {
   const char* password = WIFI_PASSWORD;
   bool WiFi_Status = WiFi_INIT(ssid, password);
 
+  //WebSocket
+  socket.onEvent(onWebSocketEvent);
+  gate.addHandler(&socket);
+  gate.begin();
   if (WiFi_Status = true){
     Serial.println("Bootup successful");
   }
@@ -52,6 +85,7 @@ void setup() {
 
 void loop() {
   HeartBeat();
+  socket.cleanupClients();
 }
 
 
