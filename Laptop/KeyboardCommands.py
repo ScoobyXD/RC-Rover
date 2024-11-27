@@ -1,47 +1,70 @@
 import websocket
+import keyboard
+import threading
 import time
 import config
 
-
-# Replace with your ESP32's IP address
+# WiFi
 ESP32_WS_ENDPOINT = f"ws://{config.ESP32_IP}/ws"
+ws = websocket.WebSocket()
 
-# Function to send commands
-def send_command(ws, command):
-    print(f"Sending command: {command}")
-    ws.send(command)  # Send the command to the ESP32
-    time.sleep(1)
+#for some god forsaken reason in order for this to work need to put "event" in the parameter
+def w1(event):
+    ws.send('w1')
+    print('w1')
 
-# Callback when a message is received from the ESP32
-def on_message(ws, message):
-    print(f"Received from ESP32: {message}")
+def w0(event):
+    ws.send('w0')
+    print('w0')
 
-# Callback for errors
-def on_error(ws, error):
-    print(f"Error: {error}")
+def s1(event):
+    ws.send('s1')
+    print('s1')
 
-# Callback when the connection is closed
-def on_close(ws, close_status_code, close_msg):
-    print("Connection closed")
+def s0(event):
+    ws.send('s0')
+    print('s0')
 
-# Callback when the connection is opened
-def on_open(ws):
-    print("Connected to ESP32 WebSocket server")
-    # Example commands to send to the ESP32
-    send_command(ws, config.GO)
-    send_command(ws, config.BACK)
-    send_command(ws, config.RIGHT)
-    send_command(ws, config.LEFT)
-    send_command(ws, config.STOP)
-    #ws.close()
+def d1(event):
+    ws.send('d1')
+    print('d1')
 
-if __name__ == "__main__":
-    # Connect to the ESP32 WebSocket server
-    ws = websocket.WebSocketApp(
-        ESP32_WS_ENDPOINT,
-        on_message=on_message,
-        on_error=on_error,
-        on_close=on_close,
-        on_open=on_open
-    )
-    ws.run_forever()
+def d0(event):
+    ws.send('d0')
+    print('d0')
+
+def a1(event):
+    ws.send('a1')
+    print('a1')
+
+def a0(event):
+    ws.send('a0')
+    print('a0')
+
+def wifi_on(event):
+    ws.connect(ESP32_WS_ENDPOINT)
+    print('connecting')
+    
+def wifi_off(event):
+    ws.close()
+    print('close')
+
+
+#Wi-Fi on/off commands
+keyboard.on_press_key("o", wifi_on)
+keyboard.on_press_key("p", wifi_off)
+
+#movement commands
+keyboard.on_press_key("w", w1)
+keyboard.on_release_key("w", w0)
+keyboard.on_press_key("s", s1)
+keyboard.on_release_key("s",s0)
+keyboard.on_press_key("d", d1)
+keyboard.on_release_key("d",d0)
+keyboard.on_press_key("a", a1)
+keyboard.on_release_key("a",a0)
+
+#exit command
+keyboard.wait('esc') 
+
+
