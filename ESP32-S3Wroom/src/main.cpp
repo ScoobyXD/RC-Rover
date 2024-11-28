@@ -4,6 +4,16 @@
 #include <AsyncTCP.h>
 #include <ESPAsyncWebServer.h>
 
+//Heartbeat
+void HeartBeat();
+
+void HeartBeat() {
+  digitalWrite(LED_BUILTIN, HIGH);
+  delay(250);
+  digitalWrite(LED_BUILTIN, LOW);
+  delay(250);
+}
+
 //Wifi
 void WiFi_INIT(const char* ssid, const char* password);
 
@@ -48,10 +58,12 @@ void onWebSocketEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsE
 
 void setup() {
   //Heartbeat
+  delay(1000);
   Serial.begin(115200); //default uart0
+  pinMode(LED_BUILTIN, OUTPUT);
 
   //Wifi
-  const char* ssid = WIFI__SSID;
+  const char* ssid = WIFI_SSID;
   const char* password = WIFI_PASSWORD;
   WiFi_INIT(ssid, password);
 
@@ -67,7 +79,7 @@ void setup() {
 }
 
 void loop() {
-  Serial.println("is anything working");
+
 }
 
 
