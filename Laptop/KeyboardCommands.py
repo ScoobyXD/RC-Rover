@@ -1,7 +1,5 @@
 import websocket
 import keyboard
-import threading
-import time
 import config
 
 # WiFi

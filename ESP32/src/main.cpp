@@ -35,7 +35,7 @@ AsyncWebServer server(80); // This is the main HTTP server instance
 AsyncWebSocket socket("/ws"); //Handles WebSocket-specific communication
 
 //WebSockets rely on HTTP for the initial handshake, but after that, 
-//client sends a special HTTP request called a WebSocket upgrade request, upgrading into WebSocket protocol, which is independent of HTTP
+//client sends a special HTTP requesDWWWWWDWt called a WebSocket upgrade request, upgrading into WebSocket protocol, which is independent of HTTP
 void onWebSocketEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType type, void *arg, uint8_t *data, size_t len) {
   if (type == WS_EVT_CONNECT) {
     Serial.printf("Client connected: %u\n", client->id());
@@ -52,6 +52,9 @@ void onWebSocketEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsE
     Serial.println(command);
   }
 }
+
+//Motor Commands
+
 
 void setup() {
   //Heartbeat
