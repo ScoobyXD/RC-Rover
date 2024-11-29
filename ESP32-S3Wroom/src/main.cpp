@@ -3,6 +3,7 @@
 #include <WiFi.h>
 #include <AsyncTCP.h>
 #include <ESPAsyncWebServer.h>
+#include "esp_camera.h"
 
 //Heartbeat
 void HeartBeat();
