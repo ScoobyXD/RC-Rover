@@ -2,6 +2,7 @@ import websocket
 import keyboard
 import config
 
+#test gitignore
 # WiFi
 ESP32_WS_ENDPOINT = f"ws://{config.ESP32_IP}/ws"
 ws = websocket.WebSocket()
