@@ -7,7 +7,6 @@
 
 //Heartbeat
 void HeartBeat();
-
 void HeartBeat() {
   digitalWrite(LED_BUILTIN, HIGH);
   delay(250);
@@ -17,23 +16,66 @@ void HeartBeat() {
 
 void Forward();
 void Forward(){
-  digitalWrite(T6, LOW);
   digitalWrite(T5, HIGH);
+  digitalWrite(T6, LOW);
+  digitalWrite(T9, HIGH);
+  digitalWrite(T10, LOW);
 }
+
 void StopForward();
 void StopForward(){
-  digitalWrite(T6, LOW);
   digitalWrite(T5, LOW);
+  digitalWrite(T6, LOW);
+  digitalWrite(T9, LOW);
+  digitalWrite(T10, LOW);
 }
+
 void Back();
 void Back(){
-  digitalWrite(T5, LOW);
-  digitalWrite(T6, HIGH);
+  digitalWrite(T5, LOW);                     
+  digitalWrite(T6, HIGH);                                                                                                                                                                                                                                                                        
+  digitalWrite(T9, LOW);
+  digitalWrite(T10, HIGH);
 }
+
 void StopBack();
 void StopBack(){
   digitalWrite(T5, LOW);
   digitalWrite(T6, LOW);
+  digitalWrite(T9, LOW);
+  digitalWrite(T10, LOW);
+}
+
+void Right();
+void Right(){
+  digitalWrite(T5, HIGH);
+  digitalWrite(T6, LOW);
+  digitalWrite(T9, LOW);
+  digitalWrite(T10, HIGH);
+}
+
+void StopRight();
+void StopRight(){
+  digitalWrite(T5, LOW);
+  digitalWrite(T6, LOW);
+  digitalWrite(T9, LOW);
+  digitalWrite(T10, LOW);
+}
+
+void Left();
+void Left(){
+  digitalWrite(T5, LOW);
+  digitalWrite(T6, HIGH);
+  digitalWrite(T9, HIGH);
+  digitalWrite(T10, LOW);
+}
+
+void StopLeft();
+void StopLeft(){
+  digitalWrite(T5, LOW);
+  digitalWrite(T6, LOW);
+  digitalWrite(T9, LOW);
+  digitalWrite(T10, LOW);
 }
 
 //Wifi
@@ -82,16 +124,21 @@ void onWebSocketEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsE
     else if (command == "s0"){
       StopBack();
     }
+    else if (command == "d1"){
+      Right();
+    }
+    else if (command == "d0"){
+      StopRight();
+    }
+    else if (command == "a1"){
+      Left();
+    }
+    else if (command == "a0"){
+      StopLeft();
+    }
     Serial.println(command);
   }
 }
-
-
-
-
-//Motor Commands
-
-
 /*
 // Camera
 void handleStream(AsyncWebServerRequest *request) {
@@ -112,10 +159,6 @@ void handleStream(AsyncWebServerRequest *request) {
     request->send(response);
 }
 */
-
-
-
-
 
 void setup() {
   //Heartbeat
@@ -141,8 +184,13 @@ void setup() {
   //Motor Controls
   pinMode(T7, OUTPUT); //ENB
   analogWrite(T7, 255); //0 - 255
-  pinMode(T5, OUTPUT); //Forward
-  pinMode(T6, OUTPUT); //Backward
+  pinMode(T5, OUTPUT);  //Forward IN/OUT 3
+  pinMode(T6, OUTPUT); //Backward In/OUT 4
+
+  pinMode(T11, OUTPUT); //ENA
+  analogWrite(T11, 255); //0-225
+  pinMode(T9, OUTPUT); //Right IN/OUT 1
+  pinMode(T10, OUTPUT); //Left IN/OUT 2
   /*
   // Camera
   camera_config_t config;
